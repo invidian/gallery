@@ -5,7 +5,14 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "eject": "expo eject"
+    "eject": "expo eject",
+    "check": "gts check",
+    "clean": "gts clean",
+    "compile": "tsc",
+    "fix": "gts fix",
+    "prepare": "npm run compile",
+    "pretest": "npm run compile",
+    "posttest": "npm run check"
   },
   "dependencies": {
     "@react-native-community/masked-view": "0.1.6",
@@ -25,10 +32,13 @@
   },
   "devDependencies": {
     "@babel/core": "^7.10.3",
+    "@types/node": "^13.11.1",
     "@types/react": "^16.9.38",
     "@types/react-native": "^0.62.13",
     "babel-preset-expo": "^8.2.3",
-    "typescript": "^3.9.5"
+    "eslint": "^7.3.1",
+    "gts": "^2.0.2",
+    "typescript": "^3.8.3"
   },
   "private": true
 }
