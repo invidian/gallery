@@ -1,6 +1,10 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+
+const Stack = createStackNavigator();
 
 function Gallery() {
   return (
@@ -13,7 +17,11 @@ function Gallery() {
 export default function App() {
   return (
     <SafeAreaProvider>
-      <Gallery></Gallery>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen name="Gallery" component={Gallery} />
+        </Stack.Navigator>
+      </NavigationContainer>
     </SafeAreaProvider>
   );
 }
