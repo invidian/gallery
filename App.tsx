@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {useState, Component} from 'react';
 import {
   StyleSheet,
   Text,
@@ -190,15 +190,21 @@ function ImageModal({route, navigation}) {
   const {images} = route.params;
   const {index} = route.params;
 
+  const [immersive, setImmersive] = useState(false);
+
   return (
     <View style={{flex: 1}}>
+      <StatusBar style="light" hidden={immersive} />
       <ImageViewer
         imageUrls={images}
         index={index}
         enableSwipeDown={true}
         onSwipeDown={() => navigation.goBack()}
         saveToLocalByLongPress={false}
-        renderIndicator={ImageModalIndicator(navigation, images)}
+        renderIndicator={
+          immersive ? () => {} : ImageModalIndicator(navigation, images)
+        }
+        onClick={() => setImmersive(!immersive)}
       />
     </View>
   );
