@@ -15,6 +15,7 @@ import * as MediaLibrary from 'expo-media-library';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import {StatusBar} from 'expo-status-bar';
 import Icon from 'react-native-vector-icons/AntDesign';
+import moment from 'moment';
 
 class Gallery extends Component {
   imageBuffer = 500;
@@ -25,9 +26,13 @@ class Gallery extends Component {
 
     images.forEach(image => {
       result.push({
+        // Required by ImageViewer to display the image.
         url: image.uri,
+        // Specify width and height for performance optimization.
         width: image.width,
         height: image.height,
+        // Pass remaining information about the image in the properties, so they can be used for each image.
+        props: image,
       });
     });
 
@@ -137,18 +142,48 @@ function GalleryItem({images, index, navigation}) {
   );
 }
 
-function ImageModalIndicator(currentIndex, allSize) {
-  return (
-    <View style={{position: "absolute", zIndex: 9999, backgroundColor: 'rgba(0,0,0,0.5)', height: '10%', width: '100%', justifyContent: 'center', alignItems: 'center'}}>
-      <Icon.Button
-        name="back"
-        backgroundColor="rgba(0,0,0,0.0)"
-        size={30}
-        onPress={() => console.log("go back")}
-      ></Icon.Button>
-      <Text style={{color: 'white'}}>{currentIndex}Foo</Text>
-    </View>
-  );
+const imageModalIndicatorstyles = StyleSheet.create({
+  container: {
+    position: 'absolute',
+    zIndex: 9999,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    height: '12%',
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  backButton: {
+    flex: 1,
+  },
+  text: {
+    color: 'white',
+    flex: 5,
+    fontSize: 18,
+    textAlign: 'center',
+  },
+});
+
+function ImageModalIndicator(navigation, images) {
+  return function (currentIndex, allSize) {
+    return (
+      <View style={imageModalIndicatorstyles.container}>
+        <Icon.Button
+          name="back"
+          backgroundColor="rgba(0,0,0,0.0)"
+          size={30}
+          onPress={() => navigation.goBack()}
+          style={imageModalIndicatorstyles.backButton}
+        ></Icon.Button>
+        <Text style={imageModalIndicatorstyles.text}>
+          {moment(images[currentIndex].props.modificationTime).format(
+            'D MMMM YYYY'
+          )}
+        </Text>
+        <View style={{flex: 1}}></View>
+      </View>
+    );
+  };
 }
 
 function ImageModal({route, navigation}) {
@@ -163,7 +198,7 @@ function ImageModal({route, navigation}) {
         enableSwipeDown={true}
         onSwipeDown={() => navigation.goBack()}
         saveToLocalByLongPress={false}
-        renderIndicator={ImageModalIndicator}
+        renderIndicator={ImageModalIndicator(navigation, images)}
       />
     </View>
   );
